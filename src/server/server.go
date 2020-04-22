@@ -4,11 +4,11 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// InitRoutes Map request into the defined routes
-func InitRoutes() *mux.Router {
-	route := mux.NewRouter()
+// InitRouter maps the defined routes
+func InitRouter() *mux.Router {
+	router := mux.NewRouter()
 	for _, r := range routes {
-		route.Methods(r.Method).Name(r.Name).Path(r.Path).Handler(r.HandlerFunc)
+		router.Methods(r.Method).Name(r.Name).Path(r.Path).Handler(r.HandlerFunc)
 	}
-	return route
+	return router
 }

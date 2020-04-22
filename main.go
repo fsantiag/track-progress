@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	server := server.InitRoutes()
-	log.Println("Server starting...")
-	log.Fatal(http.ListenAndServe(":8080", server))
+	s := server.InitRouter()
+	log.Println("Server started...")
+	log.Fatal(http.ListenAndServe(":8080", s))
 }

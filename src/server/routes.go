@@ -14,6 +14,6 @@ type Route struct {
 	HandlerFunc http.HandlerFunc
 }
 
-var routes = [...]Route{
-	{"Status", http.MethodGet, "/health", controller.Health},
+var routes = []Route{
+	{"Health", http.MethodGet, "/health", controller.Health},
 }
