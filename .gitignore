@@ -13,3 +13,6 @@
 
 # Dependency directories
 vendor/
+
+# Files
+.DS_Store
