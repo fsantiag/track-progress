@@ -6,10 +6,14 @@ import (
 	"github.com/gocql/gocql"
 )
 
-// NewConnection return a new connection to database
-func NewConnection() *gocql.Session {
+// NewSession return a new session to database
+func NewSession() *gocql.Session {
 	cluster := gocql.NewCluster("localhost")
-	cluster.Keyspace = "trackprogress"
+
+	cluster.Authenticator = gocql.PasswordAuthenticator{
+		Username: "cassandra",
+		Password: "cassandra",
+	}
 
 	session, err := cluster.CreateSession()
 	if err != nil {
