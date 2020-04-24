@@ -2,7 +2,7 @@ package configuration
 
 // Migrate creates the KeySpace and Table for the project
 func Migrate() {
-	session := NewSession()
+	session, _ := NewSession()
 	session.Query(`
 		CREATE KEYSPACE IF NOT EXISTS tp
 		WITH REPLICATION = { 
