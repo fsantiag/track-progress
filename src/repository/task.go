@@ -3,7 +3,6 @@ package repository
 import (
 	"log"
 
-	"github.com/fsantiag/track-progress/src/configuration"
 	"github.com/fsantiag/track-progress/src/model"
 	"github.com/gocql/gocql"
 )
@@ -16,7 +15,7 @@ const selectTasks = "SELECT * FROM tp.task"
 type TaskRepository struct{}
 
 // Save method used to save a new task
-func (repository TaskRepository) Save(session configuration.SessionInterface, task model.Task) (err error) {
+func (repository TaskRepository) Save(session SessionInterface, task model.Task) (err error) {
 	id, _ := gocql.RandomUUID()
 	err = session.Query(insertTask, id, task.Title, task.Description, task.Status).Exec()
 	if err != nil {
@@ -26,8 +25,8 @@ func (repository TaskRepository) Save(session configuration.SessionInterface, ta
 }
 
 // GetAll returns all tasks in the table
-func (repository TaskRepository) GetAll(s configuration.SessionInterface) (tasks []model.Task) {
-	iter := s.Query(selectTasks).Iter()
+func (repository TaskRepository) GetAll(session SessionInterface) (tasks []model.Task) {
+	iter := session.Query(selectTasks).Iter()
 
 	m := map[string]interface{}{}
 

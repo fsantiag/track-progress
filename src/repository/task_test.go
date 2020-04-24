@@ -3,7 +3,6 @@ package repository
 import (
 	"testing"
 
-	"github.com/fsantiag/track-progress/src/configuration"
 	"github.com/gocql/gocql"
 	"github.com/stretchr/testify/assert"
 )
@@ -39,11 +38,11 @@ func (i stubIter) MapScan(m map[string]interface{}) bool {
 func (q stubQuery) Exec() error {
 	return nil
 }
-func (q stubQuery) Iter() configuration.IterInterface {
+func (q stubQuery) Iter() IterInterface {
 	return stubIter{}
 }
 
-func (s stubSession) Query(string, ...interface{}) configuration.QueryInterface {
+func (s stubSession) Query(string, ...interface{}) QueryInterface {
 	return stubQuery{}
 }
 
