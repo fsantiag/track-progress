@@ -8,3 +8,20 @@ services:
       - '${PWD}/cassandra/cassandra.yaml:/etc/cassandra/cassandra.yaml'
     ports:
       - '9042:9042'
+  localstack:
+    container_name: "aws"
+    image: localstack/localstack
+    ports:
+      - "4566-4599:4566-4599"
+      - "${PORT_WEB_UI-8081}:${PORT_WEB_UI-8081}"
+    environment:
+      - SERVICES=s3,sqs
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+      - PORT_WEB_UI=8081
+      - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR- }
+      - KINESIS_ERROR_PROBABILITY=${KINESIS_ERROR_PROBABILITY- }
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
