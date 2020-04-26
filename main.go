@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -16,13 +15,13 @@ func main() {
 	// Setup the database
 	session, err := database.NewSession()
 	if err != nil {
-		fmt.Println("Database connection error:", err)
+		log.Fatal("Database connection error:", err.Error())
 	}
 	defer session.Close()
 	database.Migrate(session)
 
 	// Start the goroutine listeners
-	channel := make(chan *sqs.Message)
+	channel := make(chan *sqs.Message, 100)
 	connection := queue.NewSession()
 	queue.CreateQueues(connection)
 	go queue.Poll(channel, connection)
