@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -13,7 +14,10 @@ import (
 
 func main() {
 	// Setup the database
-	session, _ := database.NewSession()
+	session, err := database.NewSession()
+	if err != nil {
+		fmt.Println("Database connection error:", err)
+	}
 	defer session.Close()
 	database.Migrate(session)
 
