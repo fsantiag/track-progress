@@ -2,6 +2,51 @@
 
 
 [[projects]]
+  digest = "1:45f0ea7df58b41e4f46d8b18863c846884af5e920dd70352fad115444e59f331"
+  name = "github.com/aws/aws-sdk-go"
+  packages = [
+    "aws",
+    "aws/awserr",
+    "aws/awsutil",
+    "aws/client",
+    "aws/client/metadata",
+    "aws/corehandlers",
+    "aws/credentials",
+    "aws/credentials/ec2rolecreds",
+    "aws/credentials/endpointcreds",
+    "aws/credentials/processcreds",
+    "aws/credentials/stscreds",
+    "aws/csm",
+    "aws/defaults",
+    "aws/ec2metadata",
+    "aws/endpoints",
+    "aws/request",
+    "aws/session",
+    "aws/signer/v4",
+    "internal/context",
+    "internal/ini",
+    "internal/sdkio",
+    "internal/sdkmath",
+    "internal/sdkrand",
+    "internal/sdkuri",
+    "internal/shareddefaults",
+    "internal/strings",
+    "internal/sync/singleflight",
+    "private/protocol",
+    "private/protocol/json/jsonutil",
+    "private/protocol/query",
+    "private/protocol/query/queryutil",
+    "private/protocol/rest",
+    "private/protocol/xml/xmlutil",
+    "service/sqs",
+    "service/sts",
+    "service/sts/stsiface",
+  ]
+  pruneopts = "UT"
+  revision = "f0dfb79c0be6913c83c11458616813a5e6a559bd"
+  version = "v1.30.13"
+
+[[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
@@ -47,6 +92,13 @@
   revision = "e80d13ce29ede4452c43dea11e79b9bc8a15b478"
 
 [[projects]]
+  digest = "1:bb81097a5b62634f3e9fec1014657855610c82d19b9a40c17612e32651e35dca"
+  name = "github.com/jmespath/go-jmespath"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "c2b33e84"
+
+[[projects]]
   digest = "1:0028cb19b2e4c3112225cd871870f2d9cf49b9b4276531f03438a88e94be86fe"
   name = "github.com/pmezard/go-difflib"
   packages = ["difflib"]
@@ -82,6 +134,10 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/aws/aws-sdk-go/aws",
+    "github.com/aws/aws-sdk-go/aws/credentials",
+    "github.com/aws/aws-sdk-go/aws/session",
+    "github.com/aws/aws-sdk-go/service/sqs",
     "github.com/gocql/gocql",
     "github.com/gorilla/mux",
     "github.com/stretchr/testify/assert",
