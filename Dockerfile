@@ -1,15 +1,9 @@
-FROM golang:1.14.2
+FROM alpine
 
-RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+RUN mkdir /app
 
-RUN mkdir /go/src/app
+COPY track-progress /app
 
-COPY . /go/src/app
+WORKDIR /app
 
-WORKDIR /go/src/app
-
-RUN dep ensure
-
-RUN go build -o /app/main .
-
-CMD ["/app/main"]
+CMD ["/app/track-progress"]

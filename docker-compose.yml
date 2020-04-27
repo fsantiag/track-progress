@@ -23,8 +23,7 @@ services:
       - SERVICES=sqs
   tp:
     container_name: track_progress
-    build:
-      context: .
+    image: track-progress:1.0.0
     environment:
       - CASSANDRA_HOST=cassandra
       - SQS_HOST=http://sqs:4576
