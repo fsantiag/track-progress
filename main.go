@@ -9,6 +9,7 @@ import (
 	"github.com/fsantiag/track-progress/src/queue"
 	"github.com/fsantiag/track-progress/src/server"
 	"github.com/fsantiag/track-progress/src/service"
+	"github.com/fsantiag/track-progress/src/util"
 )
 
 func main() {
@@ -30,5 +31,5 @@ func main() {
 	// Init the server
 	s := server.InitRouter()
 	log.Println("Server started...")
-	log.Fatal(http.ListenAndServe(":8080", s))
+	log.Fatal(http.ListenAndServe(server.Address[util.Getenv("PROFILE_ENV", "dev")], s))
 }
