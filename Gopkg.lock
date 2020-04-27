@@ -2,7 +2,7 @@
 
 
 [[projects]]
-  digest = "1:45f0ea7df58b41e4f46d8b18863c846884af5e920dd70352fad115444e59f331"
+  digest = "1:38a4acb3bd95d285164f729d63cd302f5ec51126d93e59bf53cc6c93dfd6a547"
   name = "github.com/aws/aws-sdk-go"
   packages = [
     "aws",
@@ -39,12 +39,13 @@
     "private/protocol/rest",
     "private/protocol/xml/xmlutil",
     "service/sqs",
+    "service/sqs/sqsiface",
     "service/sts",
     "service/sts/stsiface",
   ]
   pruneopts = "UT"
-  revision = "f0dfb79c0be6913c83c11458616813a5e6a559bd"
-  version = "v1.30.13"
+  revision = "ac563387549b07941406daf0b29878f9ce909b71"
+  version = "v1.30.14"
 
 [[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
@@ -107,9 +108,20 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:5e8f46b412421d2d6cceea845d28ac46f3f5a5f60a6e86f0ee75e24fd43a02a9"
+  digest = "1:23472f69a3ee7225de2f104aa48c6456959d1c155e45035c9845806d83109190"
+  name = "github.com/stretchr/objx"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "ea4fe68685ee0d3cee7032121851b57e7494e8ea"
+  version = "v0.2.0"
+
+[[projects]]
+  digest = "1:d43ea99f6c448b0660a10e93a259ed2988893d2ffa4eb4684014bf4fc4b64e04"
   name = "github.com/stretchr/testify"
-  packages = ["assert"]
+  packages = [
+    "assert",
+    "mock",
+  ]
   pruneopts = "UT"
   revision = "3ebf1ddaeb260c4b1ae502a01c7844fa8c1fa0e9"
   version = "v1.5.1"
@@ -138,9 +150,11 @@
     "github.com/aws/aws-sdk-go/aws/endpoints",
     "github.com/aws/aws-sdk-go/aws/session",
     "github.com/aws/aws-sdk-go/service/sqs",
+    "github.com/aws/aws-sdk-go/service/sqs/sqsiface",
     "github.com/gocql/gocql",
     "github.com/gorilla/mux",
     "github.com/stretchr/testify/assert",
+    "github.com/stretchr/testify/mock",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

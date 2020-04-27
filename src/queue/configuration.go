@@ -26,7 +26,7 @@ func CreateQueues(svc *sqs.SQS) {
 	result, err := svc.CreateQueue(&sqs.CreateQueueInput{
 		QueueName: aws.String("queue"),
 		Attributes: map[string]*string{
-			"DelaySeconds":           aws.String("60"),
+			"DelaySeconds":           aws.String("10"),
 			"MessageRetentionPeriod": aws.String("86400"),
 		},
 	})
