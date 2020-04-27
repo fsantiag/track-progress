@@ -20,5 +20,5 @@ func TestFoo(t *testing.T) {
 
 	connection := &connectionStub{}
 	channel := make(chan *sqs.Message)
-	Poll(channel, connection)
+	Poll(channel, "", connection)
 }
