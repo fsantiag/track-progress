@@ -9,13 +9,8 @@ import (
 	"github.com/aws/aws-sdk-go/service/sqs/sqsiface"
 )
 
-//constants
-const (
-	QueueURL = "http://localhost:4576/123456789012/queue"
-)
-
 // Poll messages from SQS and send them into the passed channel
-func Poll(channel chan<- *sqs.Message, connection sqsiface.SQSAPI) {
+func Poll(channel chan<- *sqs.Message, queueURL string, connection sqsiface.SQSAPI) {
 	for {
 		result, err := connection.ReceiveMessage(&sqs.ReceiveMessageInput{
 			AttributeNames: []*string{
@@ -24,7 +19,7 @@ func Poll(channel chan<- *sqs.Message, connection sqsiface.SQSAPI) {
 			MessageAttributeNames: []*string{
 				aws.String(sqs.QueueAttributeNameAll),
 			},
-			QueueUrl:          aws.String(QueueURL),
+			QueueUrl:          aws.String(queueURL),
 			VisibilityTimeout: aws.Int64(20),
 			WaitTimeSeconds:   aws.Int64(10),
 		})
@@ -38,7 +33,7 @@ func Poll(channel chan<- *sqs.Message, connection sqsiface.SQSAPI) {
 			channel <- result.Messages[0]
 
 			_, err := connection.DeleteMessage(&sqs.DeleteMessageInput{
-				QueueUrl:      aws.String(QueueURL),
+				QueueUrl:      aws.String(queueURL),
 				ReceiptHandle: result.Messages[0].ReceiptHandle,
 			})
 

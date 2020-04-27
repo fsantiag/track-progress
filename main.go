@@ -23,8 +23,8 @@ func main() {
 	// Start the goroutine listeners
 	channel := make(chan *sqs.Message, 100)
 	connection := queue.NewSession()
-	queue.CreateQueues(connection)
-	go queue.Poll(channel, connection)
+	queueURL := queue.CreateQueues(connection)
+	go queue.Poll(channel, queueURL, connection)
 	go service.ProcessTaskMessage(channel)
 
 	// Init the server

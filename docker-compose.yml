@@ -20,4 +20,5 @@ services:
     build:
       context: .
     environment:
-      - FOO=bar
+      - CASSANDRA_HOST=cassandra
+      - SQS_HOST=http://sqs:4576

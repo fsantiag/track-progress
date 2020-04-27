@@ -7,24 +7,23 @@ import (
 	"github.com/aws/aws-sdk-go/aws/endpoints"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sqs"
+	"github.com/fsantiag/track-progress/src/util"
 )
 
-const (
-	Endpoint = "http://localhost:4576"
-)
-
+// NewSession create a new connection to SQS
 func NewSession() *sqs.SQS {
 	session := session.Must(session.NewSession(&aws.Config{
 		Region:   aws.String(endpoints.UsWest2RegionID),
-		Endpoint: aws.String(Endpoint),
+		Endpoint: aws.String(util.Getenv("SQS_HOST", "http://localhost:4576")),
 	}))
 
 	return sqs.New(session)
 }
 
-func CreateQueues(svc *sqs.SQS) {
+// CreateQueues create a new queue in SQS
+func CreateQueues(svc *sqs.SQS) string {
 	result, err := svc.CreateQueue(&sqs.CreateQueueInput{
-		QueueName: aws.String("queue"),
+		QueueName: aws.String(util.Getenv("SQS_QUEUE_NAME", "queue")),
 		Attributes: map[string]*string{
 			"DelaySeconds":           aws.String("10"),
 			"MessageRetentionPeriod": aws.String("86400"),
@@ -32,8 +31,8 @@ func CreateQueues(svc *sqs.SQS) {
 	})
 	if err != nil {
 		fmt.Println("Error", err)
-		return
+		return ""
 	}
 
-	fmt.Println("Success", *result.QueueUrl)
+	return *result.QueueUrl
 }
