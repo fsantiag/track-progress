@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/endpoints"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sqs"
@@ -14,9 +13,8 @@ import (
 // NewSession create a new connection to SQS
 func NewSession() *sqs.SQS {
 	session := session.Must(session.NewSession(&aws.Config{
-		Region:      aws.String(endpoints.UsWest2RegionID),
-		Endpoint:    aws.String(util.Getenv("SQS_HOST", "http://localhost:4576")),
-		Credentials: credentials.NewStaticCredentials("test", "secretKey", "sessionToken"),
+		Region:   aws.String(endpoints.UsWest2RegionID),
+		Endpoint: aws.String(util.Getenv("SQS_HOST", "http://localhost:4576")),
 	}))
 
 	return sqs.New(session)
