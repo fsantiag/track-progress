@@ -5,12 +5,12 @@ import (
 	"os"
 
 	"github.com/aws/aws-sdk-go/service/sqs"
-	"github.com/fsantiag/track-progress/api/src/database"
-	"github.com/fsantiag/track-progress/api/src/queue"
-	"github.com/fsantiag/track-progress/api/src/repository"
-	"github.com/fsantiag/track-progress/api/src/server"
-	"github.com/fsantiag/track-progress/api/src/service"
-	"github.com/fsantiag/track-progress/api/src/util"
+	"github.com/fsantiag/track-progress/backend/src/database"
+	"github.com/fsantiag/track-progress/backend/src/queue"
+	"github.com/fsantiag/track-progress/backend/src/repository"
+	"github.com/fsantiag/track-progress/backend/src/server"
+	"github.com/fsantiag/track-progress/backend/src/service"
+	"github.com/fsantiag/track-progress/backend/src/util"
 	"github.com/sirupsen/logrus"
 )
 

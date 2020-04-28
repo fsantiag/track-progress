@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"github.com/aws/aws-sdk-go/service/sqs"
-	"github.com/fsantiag/track-progress/api/src/model"
-	"github.com/fsantiag/track-progress/api/src/repository"
+	"github.com/fsantiag/track-progress/backend/src/model"
+	"github.com/fsantiag/track-progress/backend/src/repository"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"

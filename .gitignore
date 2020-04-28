@@ -12,7 +12,8 @@
 *.out
 
 # Dependency directories
-/api/vendor/
+/backend/vendor/
+/frontend/node_modules/
 
 # Files
 .DS_Store

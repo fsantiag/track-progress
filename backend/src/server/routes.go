@@ -3,7 +3,7 @@ package server
 import (
 	"net/http"
 
-	"github.com/fsantiag/track-progress/api/src/controller"
+	"github.com/fsantiag/track-progress/backend/src/controller"
 )
 
 // Route a data structure for routes

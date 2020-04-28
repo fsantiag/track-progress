@@ -3,7 +3,7 @@ package repository
 import (
 	"log"
 
-	"github.com/fsantiag/track-progress/api/src/model"
+	"github.com/fsantiag/track-progress/backend/src/model"
 	"github.com/gocql/gocql"
 	"github.com/sirupsen/logrus"
 )
