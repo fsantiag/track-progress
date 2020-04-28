@@ -3,7 +3,7 @@ package database
 import (
 	"testing"
 
-	"github.com/fsantiag/track-progress/src/repository"
+	"github.com/fsantiag/track-progress/api/src/repository"
 	"github.com/stretchr/testify/assert"
 )
 

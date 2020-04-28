@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/fsantiag/track-progress/src/controller"
+	"github.com/fsantiag/track-progress/api/src/controller"
 	"github.com/stretchr/testify/assert"
 )
 

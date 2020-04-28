@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 
 	"github.com/aws/aws-sdk-go/service/sqs"
-	"github.com/fsantiag/track-progress/src/model"
-	"github.com/fsantiag/track-progress/src/repository"
+	"github.com/fsantiag/track-progress/api/src/model"
+	"github.com/fsantiag/track-progress/api/src/repository"
 	"github.com/sirupsen/logrus"
 )
 

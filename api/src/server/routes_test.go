@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/fsantiag/track-progress/src/controller"
-	"github.com/fsantiag/track-progress/src/util"
+	"github.com/fsantiag/track-progress/api/src/controller"
+	"github.com/fsantiag/track-progress/api/src/util"
 	"github.com/stretchr/testify/assert"
 )
 

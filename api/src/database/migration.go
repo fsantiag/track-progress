@@ -1,6 +1,6 @@
 package database
 
-import "github.com/fsantiag/track-progress/src/repository"
+import "github.com/fsantiag/track-progress/api/src/repository"
 
 // Migrate creates the KeySpace and Table for the project
 func Migrate(session repository.SessionInterface) {

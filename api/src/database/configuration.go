@@ -1,8 +1,8 @@
 package database
 
 import (
-	"github.com/fsantiag/track-progress/src/repository"
-	"github.com/fsantiag/track-progress/src/util"
+	"github.com/fsantiag/track-progress/api/src/repository"
+	"github.com/fsantiag/track-progress/api/src/util"
 	"github.com/gocql/gocql"
 )
 
