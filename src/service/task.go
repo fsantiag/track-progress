@@ -1,26 +1,35 @@
 package service
 
 import (
-	"fmt"
+	"encoding/json"
 
 	"github.com/aws/aws-sdk-go/service/sqs"
-	"github.com/fsantiag/track-progress/src/database"
+	"github.com/fsantiag/track-progress/src/model"
 	"github.com/fsantiag/track-progress/src/repository"
+	"github.com/sirupsen/logrus"
 )
 
-func ProcessTaskMessage(channel <-chan *sqs.Message) {
+// ProcessTaskMessage receive a message by channel to save task
+func ProcessTaskMessage(session repository.SessionInterface, repository repository.Repository, channel <-chan *sqs.Message, logger *logrus.Logger) {
 	for {
-		message := <-channel
-
-		fmt.Println("Got this message", message)
-		session, err := database.NewSession()
-		if err != nil {
-			fmt.Println(err.Error())
-		}
-		process(channel, session)
+		process(session, repository, channel, logger)
 	}
 }
 
-func process(channel <-chan *sqs.Message, session repository.SessionInterface) {
-	//TODO save task to database
+func process(session repository.SessionInterface, repository repository.Repository, channel <-chan *sqs.Message, logger *logrus.Logger) {
+	message := <-channel
+
+	logger.Info("Got this message", message)
+	task := model.Task{}
+	err := json.Unmarshal([]byte(*message.Body), &task)
+	if err != nil {
+		logger.Error("Could not unmarshal task: ", err.Error())
+		return
+	}
+
+	err = repository.Save(session, task)
+	if err != nil {
+		logger.Error("Fail to persist task: ", err.Error())
+		return
+	}
 }
