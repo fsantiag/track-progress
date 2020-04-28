@@ -12,6 +12,14 @@ const selectTasks = "SELECT * FROM tp.task"
 const updateTask = "UPDATE tp.task SET title = ?, description = ?, status = ? WHERE id = ?"
 const deleteTask = "DELETE FROM tp.task WHERE id = ?"
 
+// Repository representes all method of tasks
+type Repository interface {
+	Save(session SessionInterface, task model.Task) (err error)
+	GetAll(session SessionInterface) (tasks []model.Task)
+	Update(session SessionInterface, task model.Task) (err error)
+	Delete(session SessionInterface, id gocql.UUID) (err error)
+}
+
 // TaskRepository represents a repository of task
 type TaskRepository struct{}
 

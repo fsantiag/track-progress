@@ -1,35 +1,52 @@
 package main
 
 import (
-	"log"
 	"net/http"
+	"os"
 
 	"github.com/aws/aws-sdk-go/service/sqs"
 	"github.com/fsantiag/track-progress/src/database"
 	"github.com/fsantiag/track-progress/src/queue"
+	"github.com/fsantiag/track-progress/src/repository"
 	"github.com/fsantiag/track-progress/src/server"
 	"github.com/fsantiag/track-progress/src/service"
 	"github.com/fsantiag/track-progress/src/util"
+	"github.com/sirupsen/logrus"
 )
 
+var logger logrus.Logger
+
+func init() {
+	logger.SetOutput(os.Stdout)
+	logger.SetLevel(logrus.InfoLevel)
+}
+
 func main() {
-	// Setup the database
+	session := setupDatabase()
+	startGoroutineListeners(session)
+	initServer()
+}
+
+func setupDatabase() repository.SessionInterface {
 	session, err := database.NewSession()
 	if err != nil {
-		log.Fatal("Database connection error:", err.Error())
+		logrus.Fatal("Database connection error:", err.Error())
 	}
 	defer session.Close()
 	database.Migrate(session)
+	return session
+}
 
-	// Start the goroutine listeners
+func startGoroutineListeners(session repository.SessionInterface) {
 	channel := make(chan *sqs.Message, 100)
 	connection := queue.NewSession()
 	queueURL := queue.CreateQueues(connection)
-	go queue.Poll(channel, queueURL, connection)
-	go service.ProcessTaskMessage(channel)
+	go queue.Poll(channel, queueURL, connection, &logger)
+	go service.ProcessTaskMessage(session, repository.TaskRepository{}, channel, &logger)
+}
 
-	// Init the server
+func initServer() {
 	s := server.InitRouter()
-	log.Println("Server started...")
-	log.Fatal(http.ListenAndServe(server.Address[util.Getenv("PROFILE_ENV", "dev")], s))
+	logger.Println("Server started...")
+	logger.Fatal(http.ListenAndServe(server.Address[util.Getenv("PROFILE_ENV", "dev")], s))
 }
