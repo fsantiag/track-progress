@@ -17,6 +17,7 @@ import (
 var logger logrus.Logger
 
 func init() {
+	logger.SetFormatter(&logrus.TextFormatter{FullTimestamp: true})
 	logger.SetOutput(os.Stdout)
 	logger.SetLevel(logrus.InfoLevel)
 }
@@ -30,7 +31,7 @@ func main() {
 func setupDatabase() repository.SessionInterface {
 	session, err := database.NewSession()
 	if err != nil {
-		logrus.Fatal("Database connection error:", err.Error())
+		logrus.Fatal("Database connection error: ", err.Error())
 	}
 	defer session.Close()
 	database.Migrate(session)
@@ -40,9 +41,15 @@ func setupDatabase() repository.SessionInterface {
 func startGoroutineListeners(session repository.SessionInterface) {
 	channel := make(chan *sqs.Message, 100)
 	connection := queue.NewSession()
-	queueURL := queue.CreateQueues(connection)
+	queueURL, err := queue.CreateQueues(connection)
+	if err != nil {
+		logger.Fatal("Queues creator error: ", err.Error())
+	}
 	go queue.Poll(channel, queueURL, connection, &logger)
-	go service.ProcessTaskMessage(session, repository.TaskRepository{}, channel, &logger)
+
+	repository := repository.NewTaskRepository(&logger, session)
+	service := service.NewTaskService(&logger, repository)
+	go service.ProcessTaskMessage(channel)
 }
 
 func initServer() {

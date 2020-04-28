@@ -1,8 +1,6 @@
 package database
 
 import (
-	"fmt"
-
 	"github.com/fsantiag/track-progress/src/repository"
 	"github.com/fsantiag/track-progress/src/util"
 	"github.com/gocql/gocql"
@@ -19,7 +17,7 @@ func NewSession() (repository.SessionInterface, error) {
 
 	session, err := cluster.CreateSession()
 	if err != nil {
-		return nil, fmt.Errorf("error")
+		return nil, err
 	}
 	return repository.NewSession(session), nil
 }

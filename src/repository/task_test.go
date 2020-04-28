@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/gocql/gocql"
+	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -50,9 +51,10 @@ func (s stubSession) Close() {
 }
 
 func TestGetAll(t *testing.T) {
+	logger, _ := test.NewNullLogger()
 	session := stubSession{}
-	repo := TaskRepository{}
-	tasks := repo.GetAll(session)
+	repo := NewTaskRepository(logger, session)
+	tasks := repo.GetAll()
 
 	assert.Equal(t, uuid, tasks[0].ID)
 	assert.Equal(t, "nice_title", tasks[0].Title)

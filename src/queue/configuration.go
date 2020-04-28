@@ -1,8 +1,6 @@
 package queue
 
 import (
-	"fmt"
-
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/endpoints"
@@ -27,7 +25,7 @@ func NewSession() *sqs.SQS {
 }
 
 // CreateQueues create a new queue in SQS
-func CreateQueues(svc *sqs.SQS) string {
+func CreateQueues(svc *sqs.SQS) (string, error) {
 	result, err := svc.CreateQueue(&sqs.CreateQueueInput{
 		QueueName: aws.String(util.Getenv("SQS_QUEUE_NAME", "queue")),
 		Attributes: map[string]*string{
@@ -36,9 +34,8 @@ func CreateQueues(svc *sqs.SQS) string {
 		},
 	})
 	if err != nil {
-		fmt.Println("Error", err)
-		return ""
+		return "", err
 	}
 
-	return *result.QueueUrl
+	return *result.QueueUrl, nil
 }

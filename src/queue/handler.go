@@ -1,7 +1,6 @@
 package queue
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -33,7 +32,7 @@ func processMessage(channel chan<- *sqs.Message, queueURL string, connection sqs
 	if err != nil {
 		logger.Error("Fail to receive message: ", err)
 	} else if len(result.Messages) > 0 {
-		fmt.Println("Message received")
+		logger.Info("Message received: ", result.Messages[0].Body)
 		channel <- result.Messages[0]
 
 		_, err := connection.DeleteMessage(&sqs.DeleteMessageInput{
@@ -42,7 +41,7 @@ func processMessage(channel chan<- *sqs.Message, queueURL string, connection sqs
 		})
 
 		if err != nil {
-			fmt.Println(err.Error())
+			logger.Warn(err.Error())
 		}
 	}
 	time.Sleep(time.Second)

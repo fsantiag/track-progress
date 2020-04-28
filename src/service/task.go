@@ -9,14 +9,29 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+var (
+	logger *logrus.Logger
+	repo   repository.Repository
+)
+
+// TaskService represents a instance to process task message
+type TaskService struct{}
+
+// NewTaskService create a new instance of TaskService with your arguments
+func NewTaskService(loggerLogrus *logrus.Logger, repository repository.Repository) TaskService {
+	logger = loggerLogrus
+	repo = repository
+	return TaskService{}
+}
+
 // ProcessTaskMessage receive a message by channel to save task
-func ProcessTaskMessage(session repository.SessionInterface, repository repository.Repository, channel <-chan *sqs.Message, logger *logrus.Logger) {
+func (ts TaskService) ProcessTaskMessage(channel <-chan *sqs.Message) {
 	for {
-		process(session, repository, channel, logger)
+		ts.process(channel)
 	}
 }
 
-func process(session repository.SessionInterface, repository repository.Repository, channel <-chan *sqs.Message, logger *logrus.Logger) {
+func (ts TaskService) process(channel <-chan *sqs.Message) {
 	message := <-channel
 
 	logger.Info("Got this message", message)
@@ -27,7 +42,7 @@ func process(session repository.SessionInterface, repository repository.Reposito
 		return
 	}
 
-	err = repository.Save(session, task)
+	err = repo.Save(task)
 	if err != nil {
 		logger.Error("Fail to persist task: ", err.Error())
 		return

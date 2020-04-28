@@ -13,24 +13,19 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-type sessionStub struct {
-	repository.SessionInterface
-}
-
 type connectionRepository struct {
 	mock.Mock
 	repository.Repository
 }
 
-func (c *connectionRepository) Save(session repository.SessionInterface, task model.Task) (err error) {
-	args := c.Called(session, task)
+func (c *connectionRepository) Save(task model.Task) (err error) {
+	args := c.Called(task)
 	return args.Error(0)
 }
 
 func TestProcessTask(t *testing.T) {
 	logger, _ := test.NewNullLogger()
 	connection := connectionRepository{}
-	session := sessionStub{}
 	channel := make(chan *sqs.Message, 1)
 	task := model.Task{}
 	body := `{"title":"any title","description":"any description","status":"any status"}`
@@ -39,9 +34,10 @@ func TestProcessTask(t *testing.T) {
 	channel <- &message
 	json.Unmarshal([]byte(body), &task)
 
-	connection.On("Save", session, task).Return(nil)
+	connection.On("Save", task).Return(nil)
 
-	process(session, &connection, channel, logger)
+	service := NewTaskService(logger, &connection)
+	service.process(channel)
 
 	connection.AssertNumberOfCalls(t, "Save", 1)
 	connection.AssertExpectations(t)
@@ -50,7 +46,6 @@ func TestProcessTask(t *testing.T) {
 func TestProcessTaskWithErrorToSaveTask(t *testing.T) {
 	logger, hook := test.NewNullLogger()
 	connection := connectionRepository{}
-	session := sessionStub{}
 	channel := make(chan *sqs.Message, 1)
 	newError := errors.New("error to persist")
 
@@ -60,9 +55,10 @@ func TestProcessTaskWithErrorToSaveTask(t *testing.T) {
 
 	task := model.Task{}
 	json.Unmarshal([]byte(body), &task)
-	connection.On("Save", session, task).Return(newError)
+	connection.On("Save", task).Return(newError)
 
-	process(session, &connection, channel, logger)
+	service := NewTaskService(logger, &connection)
+	service.process(channel)
 
 	assert.Equal(t, 2, len(hook.Entries))
 	assert.Equal(t, "Fail to persist task: error to persist", hook.LastEntry().Message)
@@ -73,14 +69,14 @@ func TestProcessTaskWithErrorToSaveTask(t *testing.T) {
 func TestUnmarshalTaskError(t *testing.T) {
 	logger, hook := test.NewNullLogger()
 	connection := connectionRepository{}
-	session := sessionStub{}
 	channel := make(chan *sqs.Message, 1)
 
 	body := "wrong body"
 	message := sqs.Message{Body: &body}
 	channel <- &message
 
-	process(session, &connection, channel, logger)
+	service := NewTaskService(logger, &connection)
+	service.process(channel)
 
 	assert.Equal(t, 2, len(hook.Entries))
 	assert.Equal(t, "Could not unmarshal task: invalid character 'w' looking for beginning of value", hook.LastEntry().Message)
