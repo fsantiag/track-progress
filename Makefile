@@ -1,12 +1,21 @@
 .PHONY: docker
 
-build: 
-	cd backend && GOOS=linux GOARCH=amd64 go build -o track-progress
+images: clean frontend-image backend-image
 
-image: 
-	docker build -t track-progress:1.0.0 .
+frontend-image: frontend-build
+	cd frontend && docker build -t frontend .
+
+backend-image: backend-build
+	cd backend && docker build -t backend .
+
+backend-build: foo
+	cd backend && GOOS=linux GOARCH=amd64 go build -o backend
+
+frontend-build:
+	cd frontend && npm install && npm run build
 
 clean:
 	rm -rf backend/track-progress
-
-build-container: build image clean
+	rm -rf backend/vendor
+	rm -rf frontend/node_modules
+	rm -rf frontend/build

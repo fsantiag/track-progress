@@ -1,15 +1,19 @@
 version: '3'
 
 services:
-  tp:
-    container_name: track_progress
-    image: track-progress:1.0.0
+  backend:
+    container_name: backend
+    image: backend
     environment:
       - CASSANDRA_HOST=cassandra
       - SQS_HOST=http://sqs:4576
-    depends_on:
-      - cassandra
-      - sqs
+    ports:
+      - "8070:8080"
+  frontend:
+    container_name: frontend
+    image: frontend
+    ports:
+      - "8080:80"
   sqs:
     image: localstack/localstack
     container_name: sqs
@@ -23,5 +27,3 @@ services:
     container_name: cassandra
     volumes:
       - '${PWD}/docker/cassandra/cassandra.yaml:/etc/cassandra/cassandra.yaml'
-    ports:
-      - '9042:9042'
