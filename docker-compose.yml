@@ -4,6 +4,8 @@ services:
   tp:
     container_name: track_progress
     image: track-progress:1.0.0
+    ports:
+      - "8080:8080"
     environment:
       - CASSANDRA_HOST=cassandra
       - SQS_HOST=http://sqs:4576
