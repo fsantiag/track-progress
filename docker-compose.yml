@@ -1,4 +1,4 @@
-version: '3'
+version: '3.3'
 
 services:
   backend:
@@ -10,6 +10,7 @@ services:
       - PROFILE_ENV=prod
     ports:
       - "8070:8080"
+    command: "bash -c './wait.sh -t 30 sqs:4576 && ./wait.sh -t 30 cassandra:9042 && sleep 5 && /app/backend'"
   frontend:
     container_name: frontend
     image: frontend
@@ -19,7 +20,6 @@ services:
     image: localstack/localstack
     container_name: sqs
     ports:
-      - "4567-4584:4567-4584"
       - "8090:8080"
     environment:
       - SERVICES=sqs
@@ -28,3 +28,6 @@ services:
     container_name: cassandra
     volumes:
       - '${PWD}/docker/cassandra/cassandra.yaml:/etc/cassandra/cassandra.yaml'
+    ports:
+      - "7199:7199"
+      - "9042:9042"
