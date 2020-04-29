@@ -7,6 +7,7 @@ services:
     environment:
       - CASSANDRA_HOST=cassandra
       - SQS_HOST=http://sqs:4576
+      - PROFILE_ENV=prod
     ports:
       - "8070:8080"
   frontend:

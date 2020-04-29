@@ -54,6 +54,8 @@ func startGoroutineListeners(session repository.SessionInterface) {
 
 func initServer() {
 	s := server.InitRouter()
-	logger.Println("Server started...")
-	logger.Fatal(http.ListenAndServe(server.Address[util.Getenv("PROFILE_ENV", "dev")], s))
+	logger.Info("Server started...")
+	env := util.Getenv("PROFILE_ENV", "dev")
+	logger.Debug("Environment: ", env)
+	logger.Fatal(http.ListenAndServe(server.Address[env], s))
 }

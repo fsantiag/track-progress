@@ -8,8 +8,8 @@ frontend-image: frontend-build
 backend-image: backend-build
 	cd backend && docker build -t backend .
 
-backend-build: foo
-	cd backend && GOOS=linux GOARCH=amd64 go build -o backend
+backend-build:
+	cd backend && dep ensure && GOOS=linux GOARCH=amd64 go build -o backend
 
 frontend-build:
 	cd frontend && npm install && npm run build
