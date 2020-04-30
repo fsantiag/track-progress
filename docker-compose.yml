@@ -10,6 +10,7 @@ services:
       - PROFILE_ENV=prod
     networks:
       tp-network:
+         ipv4_address: 172.28.0.2
     ports:
       - "8070:8080"
     command: "bash -c './wait.sh -t 30 sqs:4576 && ./wait.sh -t 30 cassandra:9042 && /app/backend'"
@@ -20,6 +21,7 @@ services:
       - "8080:80"
     networks:
       tp-network:
+         ipv4_address: 172.28.0.3
   sqs:
     image: localstack/localstack
     container_name: sqs
@@ -29,6 +31,7 @@ services:
       - SERVICES=sqs
     networks:
       tp-network:
+         ipv4_address: 172.28.0.5
   cassandra:
     image: cassandra
     container_name: cassandra
