@@ -8,6 +8,9 @@ services:
       - CASSANDRA_HOST=cassandra
       - SQS_HOST=http://sqs:4576
       - PROFILE_ENV=prod
+    networks:
+      tp-network:
+         ipv4_address: 172.28.0.2
     ports:
       - "8070:8080"
     command: "bash -c './wait.sh -t 30 sqs:4576 && ./wait.sh -t 30 cassandra:9042 && /app/backend'"
@@ -16,6 +19,9 @@ services:
     image: frontend
     ports:
       - "8080:80"
+    networks:
+      tp-network:
+         ipv4_address: 172.28.0.3
   sqs:
     image: localstack/localstack
     container_name: sqs
@@ -23,8 +29,20 @@ services:
       - "8090:8080"
     environment:
       - SERVICES=sqs
+    networks:
+      tp-network:
+         ipv4_address: 172.28.0.5
   cassandra:
     image: cassandra
     container_name: cassandra
     volumes:
       - '${PWD}/docker/cassandra/cassandra.yaml:/etc/cassandra/cassandra.yaml'
+    networks:
+      tp-network:
+         ipv4_address: 172.28.0.4
+networks:
+    tp-network:
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.28.0.0/16

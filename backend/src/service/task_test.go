@@ -13,39 +13,38 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-type connectionRepository struct {
+type mockRepository struct {
 	mock.Mock
 	repository.Repository
 }
 
-func (c *connectionRepository) Save(task model.Task) (err error) {
+func (c *mockRepository) Save(task model.Task) (err error) {
 	args := c.Called(task)
 	return args.Error(0)
 }
 
 func TestProcessTask(t *testing.T) {
 	logger, _ := test.NewNullLogger()
-	connection := connectionRepository{}
+	repository := mockRepository{}
 	channel := make(chan *sqs.Message, 1)
-	task := model.Task{}
 	body := `{"title":"any title","description":"any description","status":"any status"}`
-
 	message := sqs.Message{Body: &body}
 	channel <- &message
+	task := model.Task{}
 	json.Unmarshal([]byte(body), &task)
 
-	connection.On("Save", task).Return(nil)
+	repository.On("Save", task).Return(nil)
 
-	service := NewTaskService(logger, &connection)
+	service := NewTaskService(logger, &repository)
 	service.process(channel)
 
-	connection.AssertNumberOfCalls(t, "Save", 1)
-	connection.AssertExpectations(t)
+	repository.AssertNumberOfCalls(t, "Save", 1)
+	repository.AssertExpectations(t)
 }
 
 func TestProcessTaskWithErrorToSaveTask(t *testing.T) {
 	logger, hook := test.NewNullLogger()
-	connection := connectionRepository{}
+	repository := mockRepository{}
 	channel := make(chan *sqs.Message, 1)
 	newError := errors.New("error to persist")
 
@@ -55,27 +54,27 @@ func TestProcessTaskWithErrorToSaveTask(t *testing.T) {
 
 	task := model.Task{}
 	json.Unmarshal([]byte(body), &task)
-	connection.On("Save", task).Return(newError)
+	repository.On("Save", task).Return(newError)
 
-	service := NewTaskService(logger, &connection)
+	service := NewTaskService(logger, &repository)
 	service.process(channel)
 
 	assert.Equal(t, 2, len(hook.Entries))
 	assert.Equal(t, "Fail to persist task: error to persist", hook.LastEntry().Message)
-	connection.AssertNumberOfCalls(t, "Save", 1)
-	connection.AssertExpectations(t)
+	repository.AssertNumberOfCalls(t, "Save", 1)
+	repository.AssertExpectations(t)
 }
 
 func TestUnmarshalTaskError(t *testing.T) {
 	logger, hook := test.NewNullLogger()
-	connection := connectionRepository{}
+	repository := mockRepository{}
 	channel := make(chan *sqs.Message, 1)
 
 	body := "wrong body"
 	message := sqs.Message{Body: &body}
 	channel <- &message
 
-	service := NewTaskService(logger, &connection)
+	service := NewTaskService(logger, &repository)
 	service.process(channel)
 
 	assert.Equal(t, 2, len(hook.Entries))
