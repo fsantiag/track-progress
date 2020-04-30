@@ -24,16 +24,16 @@ func init() {
 
 func main() {
 	session := setupDatabase()
+	defer session.Close()
 	startGoroutineListeners(session)
 	initServer()
 }
 
 func setupDatabase() repository.SessionInterface {
-	session, err := database.NewSession()
+	session, err := database.NewSession(&logger)
 	if err != nil {
 		logrus.Fatal("Database connection error: ", err.Error())
 	}
-	defer session.Close()
 	database.Migrate(session)
 	return session
 }
