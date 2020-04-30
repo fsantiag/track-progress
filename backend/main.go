@@ -23,9 +23,9 @@ func init() {
 }
 
 func main() {
-	session := setupDatabase()
-	defer session.Close()
-	startGoroutineListeners(session)
+	databaseSession := setupDatabase()
+	defer databaseSession.Close()
+	startGoroutineListeners(databaseSession)
 	initServer()
 }
 
@@ -38,16 +38,16 @@ func setupDatabase() repository.SessionInterface {
 	return session
 }
 
-func startGoroutineListeners(session repository.SessionInterface) {
+func startGoroutineListeners(databaseSession repository.SessionInterface) {
 	channel := make(chan *sqs.Message, 100)
-	connection := queue.NewSession()
-	queueURL, err := queue.CreateQueues(connection)
+	sqsSession := queue.NewSession()
+	queueURL, err := queue.CreateQueues(sqsSession)
 	if err != nil {
 		logger.Fatal("Queues creator error: ", err.Error())
 	}
-	go queue.Poll(channel, queueURL, connection, &logger)
+	go queue.Poll(channel, queueURL, sqsSession, &logger)
 
-	repository := repository.NewTaskRepository(&logger, session)
+	repository := repository.NewTaskRepository(&logger, databaseSession)
 	service := service.NewTaskService(&logger, repository)
 	go service.ProcessTaskMessage(channel)
 }
