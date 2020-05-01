@@ -37,7 +37,7 @@ export default class Table extends React.Component {
 
         var params = { Action: 'SendMessage', Version: '2011-10-01', MessageBody: JSON.stringify(newTask) };
         const searchParams = Object.keys(params).map((key) => {
-            return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
+            return encodeURI(key) + '=' + encodeURI(params[key]);
           }).join('&');
         var request = {
             method: 'POST',
