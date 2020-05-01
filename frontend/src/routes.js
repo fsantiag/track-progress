@@ -3,7 +3,7 @@ import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 
 import Home from './components/home'
 import MainLayout from './components/main-layout'
-import DraggableTaskList from './components/draggable-task-list'
+import Table from './components/draggable-task-list'
 
 import './index.scss'
 
@@ -22,7 +22,7 @@ export default function Routes() {
                 <Route exact path="/tasks">
                     <MainLayout>
                         <div className="drag-list">
-                            <DraggableTaskList />
+                            <Table />
                         </div>
                     </MainLayout>
                 </Route>

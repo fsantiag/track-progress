@@ -1,155 +1,83 @@
-import React, { useState } from "react";
+import initialData from './initial-data';
+import React from 'react'
+import Column from './column';
+import { DragDropContext } from 'react-beautiful-dnd'
+import styled from 'styled-components'
 
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+const Container = styled.div`
+    display: flex;
+`;
 
-const getItems = (count, offset = 0) =>
-    Array.from({ length: count }, (v, k) => k).map(k => ({
-        id: `item-${k + offset}-${new Date().getTime()}`,
-        content: `item ${k + offset}`
-    }));
+const Button = styled.button`
+  background: "lightblue";
+  color: "black";
 
-const reorder = (list, startIndex, endIndex) => {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
+  font-size: 1em;
+  margin: 1em;
+  padding: 0.25em 1em;
+  border: 1px solid;
+  border-radius: 1px;
+`;
 
-    return result;
-};
 
-const move = (source, destination, droppableSource, droppableDestination) => {
-    const sourceClone = Array.from(source);
-    const destClone = Array.from(destination);
-    const [removed] = sourceClone.splice(droppableSource.index, 1);
+export default class Table extends React.Component {
+    state = initialData;
 
-    destClone.splice(droppableDestination.index, 0, removed);
+    addTask = () => {
+        const newTask = {
+            id: 'task',
+            content: 'new content'
+        };
+        this.state.tasks['task'] = newTask;
+        this.state.columns['column-1'].taskIds.push(newTask.id)
+        
+        this.setState(this.state);
 
-    const result = {};
-    result[droppableSource.droppableId] = sourceClone;
-    result[droppableDestination.droppableId] = destClone;
+    };
 
-    return result;
-};
-const grid = 8;
-
-const getItemStyle = (isDragging, draggableStyle) => ({
-    userSelect: "none",
-    padding: grid * 2,
-    margin: `0 0 ${grid}px 0`,
-
-    background: isDragging ? "lightgreen" : "grey",
-
-    ...draggableStyle
-});
-const getListStyle = isDraggingOver => ({
-    background: isDraggingOver ? "lightblue" : "lightgrey",
-    padding: grid,
-    width: 250
-});
-
-function DraggableTaskList() {
-    const [state, setState] = useState([getItems(10), getItems(5, 10)]);
-
-    function onDragEnd(result) {
-        const { source, destination } = result;
-
+    onDragEnd = result => {
+        const { destination, source, draggableId } = result;
         if (!destination) {
             return;
         }
-        const sInd = +source.droppableId;
-        const dInd = +destination.droppableId;
-
-        if (sInd === dInd) {
-            const items = reorder(state[sInd], source.index, destination.index);
-            const newState = [...state];
-            newState[sInd] = items;
-            setState(newState);
-        } else {
-            const result = move(state[sInd], state[dInd], source, destination);
-            const newState = [...state];
-            newState[sInd] = result[sInd];
-            newState[dInd] = result[dInd];
-
-            setState(newState.filter(group => group.length));
+        if (destination.droppableId === source.droppableId &&
+            destination.index === source.index) {
+            return;
         }
+        const column = this.state.columns[source.droppableId];
+        const newTaskIds = Array.from(column.taskIds);
+        newTaskIds.splice(source.index, 1);
+        newTaskIds.splice(destination.index, 0, draggableId);
+        const newColumn = {
+            ...column,
+            taskIds: newTaskIds,
+        };
+
+        const newState = {
+            ...this.state,
+            columns: {
+                ...this.columns,
+                [newColumn.id]: newColumn,
+            }
+        }
+
+        this.setState(newState);
+    };
+
+    render() {
+        return (
+            <DragDropContext onDragEnd={this.onDragEnd}>
+                <Button onClick={this.addTask}>
+                    Add task
+                </Button>
+                <Container>
+                    {this.state.columnOrder.map(columnId => {
+                        const column = this.state.columns[columnId];
+                        const tasks = column.taskIds.map(taskId => this.state.tasks[taskId]);
+                        return <Column key={column.id} column={column} tasks={tasks} />;
+                    })}
+                </Container>
+            </DragDropContext>
+        );
     }
-
-    return (
-        <div>
-            <button
-                type="button"
-                onClick={() => {
-                    setState([...state, []]);
-                }}
-            >
-                Add new group
-      </button>
-            <button
-                type="button"
-                onClick={() => {
-                    setState([...state, getItems(1)]);
-                }}
-            >
-                Add new item
-      </button>
-            <div style={{ display: "flex" }}>
-                <DragDropContext onDragEnd={onDragEnd}>
-                    {state.map((el, ind) => (
-                        <Droppable key={ind} droppableId={`${ind}`}>
-                            {(provided, snapshot) => (
-                                <div
-                                    ref={provided.innerRef}
-                                    style={getListStyle(snapshot.isDraggingOver)}
-                                    {...provided.droppableProps}
-                                >
-                                    {el.map((item, index) => (
-                                        <Draggable
-                                            key={item.id}
-                                            draggableId={item.id}
-                                            index={index}
-                                        >
-                                            {(provided, snapshot) => (
-                                                <div
-                                                    ref={provided.innerRef}
-                                                    {...provided.draggableProps}
-                                                    {...provided.dragHandleProps}
-                                                    style={getItemStyle(
-                                                        snapshot.isDragging,
-                                                        provided.draggableProps.style
-                                                    )}
-                                                >
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            justifyContent: "space-around"
-                                                        }}
-                                                    >
-                                                        {item.content}
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => {
-                                                                const newState = [...state];
-                                                                newState[ind].splice(index, 1);
-                                                                setState(
-                                                                    newState.filter(group => group.length)
-                                                                );
-                                                            }}
-                                                        >
-                                                            delete
-                            </button>
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </Draggable>
-                                    ))}
-                                    {provided.placeholder}
-                                </div>
-                            )}
-                        </Droppable>
-                    ))}
-                </DragDropContext>
-            </div>
-        </div>
-    );
 }
-
-export default DraggableTaskList
