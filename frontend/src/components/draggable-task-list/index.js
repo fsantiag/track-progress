@@ -25,13 +25,29 @@ export default class Table extends React.Component {
 
     addTask = () => {
         const newTask = {
-            id: 'task',
-            content: 'new content'
+            id: 'FOOO',
+            status: 'active',
+            title: 'Awesome title',
+            description: 'New content'
         };
-        this.state.tasks['task'] = newTask;
+        this.state.tasks[newTask.id] = newTask;
         this.state.columns['column-1'].taskIds.push(newTask.id)
-        
+
         this.setState(this.state);
+
+        var params = { Action: 'SendMessage', Version: '2011-10-01', MessageBody: JSON.stringify(newTask) };
+        const searchParams = Object.keys(params).map((key) => {
+            return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
+          }).join('&');
+        var request = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: searchParams
+        };
+
+        fetch('http://localhost:4576/queue/queue', request)
 
     };
 
