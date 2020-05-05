@@ -1,27 +1,20 @@
 import React from 'react';
-import styled from 'styled-components';
 import { Draggable } from 'react-beautiful-dnd';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 
-const Container = styled.div`
-    border: 1px solid lightgrey;
-    padding: 8px;
-    margin-bottom: 8px;
-    border-radius: 2px;
-    background-color: white;
-`;
-
-export default class Task extends React.Component {
+export default class ListItemTask extends React.Component {
     render() {
         return (
             <Draggable draggableId={this.props.task.id} index={this.props.index}>
                 {(provided) => (
-                    <Container
+                    <ListItem button alignItems="flex-start" dense
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
                         ref={provided.innerRef}
                     >
-                        {this.props.task.description}
-                    </Container>
+                        <ListItemText primary={this.props.task.description} />
+                    </ListItem>
                 )}
             </Draggable>
         );
