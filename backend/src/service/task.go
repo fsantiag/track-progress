@@ -27,13 +27,11 @@ func NewTaskService(loggerLogrus *logrus.Logger, repository repository.Repositor
 // ProcessTaskMessage receive a message by channel to save task
 func (ts TaskService) ProcessTaskMessage(channel <-chan *sqs.Message) {
 	for {
-		ts.process(channel)
+		ts.process(<- channel)
 	}
 }
 
-func (ts TaskService) process(channel <-chan *sqs.Message) {
-	message := <-channel
-
+func (ts TaskService) process(message *sqs.Message) {
 	logger.Info("Got this message", message)
 	task := model.Task{}
 	err := json.Unmarshal([]byte(*message.Body), &task)

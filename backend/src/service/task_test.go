@@ -25,57 +25,51 @@ func (c *mockRepository) Save(task model.Task) (err error) {
 
 func TestProcessTask(t *testing.T) {
 	logger, _ := test.NewNullLogger()
-	repository := mockRepository{}
-	channel := make(chan *sqs.Message, 1)
+	mockedRepository := mockRepository{}
 	body := `{"title":"any title","description":"any description","status":"any status"}`
 	message := sqs.Message{Body: &body}
-	channel <- &message
 	task := model.Task{}
-	json.Unmarshal([]byte(body), &task)
+	_ = json.Unmarshal([]byte(body), &task)
 
-	repository.On("Save", task).Return(nil)
+	mockedRepository.On("Save", task).Return(nil)
 
-	service := NewTaskService(logger, &repository)
-	service.process(channel)
+	service := NewTaskService(logger, &mockedRepository)
+	service.process(&message)
 
-	repository.AssertNumberOfCalls(t, "Save", 1)
-	repository.AssertExpectations(t)
+	mockedRepository.AssertNumberOfCalls(t, "Save", 1)
+	mockedRepository.AssertExpectations(t)
 }
 
 func TestProcessTaskWithErrorToSaveTask(t *testing.T) {
 	logger, hook := test.NewNullLogger()
-	repository := mockRepository{}
-	channel := make(chan *sqs.Message, 1)
-	newError := errors.New("error to persist")
+	mockedRepository := mockRepository{}
+	expectedError := errors.New("error to persist")
 
 	body := `{"title":"any title","description":"any description","status":"any status"}`
 	message := sqs.Message{Body: &body}
-	channel <- &message
 
 	task := model.Task{}
-	json.Unmarshal([]byte(body), &task)
-	repository.On("Save", task).Return(newError)
+	_ = json.Unmarshal([]byte(body), &task)
+	mockedRepository.On("Save", task).Return(expectedError)
 
-	service := NewTaskService(logger, &repository)
-	service.process(channel)
+	service := NewTaskService(logger, &mockedRepository)
+	service.process(&message)
 
 	assert.Equal(t, 2, len(hook.Entries))
 	assert.Equal(t, "Fail to persist task: error to persist", hook.LastEntry().Message)
-	repository.AssertNumberOfCalls(t, "Save", 1)
-	repository.AssertExpectations(t)
+	mockedRepository.AssertNumberOfCalls(t, "Save", 1)
+	mockedRepository.AssertExpectations(t)
 }
 
 func TestUnmarshalTaskError(t *testing.T) {
 	logger, hook := test.NewNullLogger()
-	repository := mockRepository{}
-	channel := make(chan *sqs.Message, 1)
+	mockedRepository := mockRepository{}
 
 	body := "wrong body"
 	message := sqs.Message{Body: &body}
-	channel <- &message
 
-	service := NewTaskService(logger, &repository)
-	service.process(channel)
+	service := NewTaskService(logger, &mockedRepository)
+	service.process(&message)
 
 	assert.Equal(t, 2, len(hook.Entries))
 	assert.Equal(t, "Could not unmarshal task: invalid character 'w' looking for beginning of value", hook.LastEntry().Message)
