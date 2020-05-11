@@ -1,7 +1,7 @@
 package mock
 
 import (
-	"github.com/fsantiag/track-progress/back-for-front/src/model"
+	"github.com/fsantiag/track-progress/back-for-front/src/model/task"
 	"github.com/fsantiag/track-progress/back-for-front/src/service"
 	"github.com/stretchr/testify/mock"
 )
@@ -13,6 +13,6 @@ type TaskServiceMock struct {
 }
 
 //SendTask is a override method from TaskService to use as mock
-func (ts *TaskServiceMock) SendTask(task model.Task) {
+func (ts *TaskServiceMock) SendTask(task task.Task) {
 	ts.Called(task)
 }

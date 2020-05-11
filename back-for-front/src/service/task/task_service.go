@@ -3,7 +3,7 @@ package task
 import (
 	"fmt"
 
-	"github.com/fsantiag/track-progress/back-for-front/src/model"
+	"github.com/fsantiag/track-progress/back-for-front/src/model/task"
 	"github.com/fsantiag/track-progress/back-for-front/src/service"
 )
 
@@ -15,6 +15,6 @@ func NewTaskService() service.TaskService {
 }
 
 //SendTask is a method that send a message to save
-func (ts taskServiceImpl) SendTask(task model.Task) {
+func (ts taskServiceImpl) SendTask(task task.Task) {
 	fmt.Println(task)
 }

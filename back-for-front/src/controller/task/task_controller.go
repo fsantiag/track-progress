@@ -1,10 +1,10 @@
-package controller
+package task
 
 import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/fsantiag/track-progress/back-for-front/src/model"
+	model "github.com/fsantiag/track-progress/back-for-front/src/model/task"
 	"github.com/fsantiag/track-progress/back-for-front/src/service"
 	"github.com/fsantiag/track-progress/back-for-front/src/service/task"
 )

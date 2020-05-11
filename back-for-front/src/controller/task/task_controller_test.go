@@ -1,4 +1,4 @@
-package controller
+package task
 
 import (
 	"encoding/json"
@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/fsantiag/track-progress/back-for-front/src/controller/internal/mock"
-	"github.com/fsantiag/track-progress/back-for-front/src/model"
+	"github.com/fsantiag/track-progress/back-for-front/src/controller/task/internal/mock"
+	model "github.com/fsantiag/track-progress/back-for-front/src/model/task"
 	"github.com/stretchr/testify/assert"
 )
 
