@@ -2,18 +2,18 @@ package controller
 
 import (
 	"encoding/json"
-	"github.com/fsantiag/track-progress/back-for-front/src/controller/internal/mock"
-	"github.com/fsantiag/track-progress/back-for-front/src/model"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/fsantiag/track-progress/back-for-front/src/controller/internal/mock"
+	"github.com/fsantiag/track-progress/back-for-front/src/model"
+	"github.com/stretchr/testify/assert"
 )
 
 var (
 	JSON = `{"id": "e55be5e4-9167-11ea-bb37-0242ac130002", "title":"Any Title", "description":"Any description", "status":"Any status"}`
-	body = strings.NewReader(JSON)
 )
 
 func TestSaveTask_ReturnStatus201(t *testing.T) {
@@ -25,21 +25,20 @@ func TestSaveTask_ReturnStatus201(t *testing.T) {
 
 func TestSaveTask_ShouldCallServiceToSendMessageToSQS(t *testing.T) {
 	task := model.Task{}
-	json.Unmarshal([]byte(JSON), &task)
-
-	request, _ := http.NewRequest(http.MethodPost, "/task", body)
+	_ = json.Unmarshal([]byte(JSON), &task)
+	request, _ := http.NewRequest(http.MethodPost, "/task", strings.NewReader(JSON))
 	recorder := httptest.NewRecorder()
-	taskService := mock.TaskServiceMock{}
+	mockedTaskService := mock.TaskServiceMock{}
+	mockedTaskService.On("SendTask", task)
 
-	taskService.On("SendTask", task)
+	saveTask(recorder, request, &mockedTaskService)
 
-	saveTask(recorder, request, &taskService)
-
-	taskService.AssertNumberOfCalls(t, "SendTask", 1)
+	mockedTaskService.AssertNumberOfCalls(t, "SendTask", 1)
+	mockedTaskService.AssertExpectations(t)
 }
 
 func executeMethodPostToTask() (error, *httptest.ResponseRecorder) {
-	request, err := http.NewRequest(http.MethodPost, "/task", body)
+	request, err := http.NewRequest(http.MethodPost, "/task", strings.NewReader(JSON))
 	recorder := httptest.NewRecorder()
 	handler := http.HandlerFunc(SaveTask)
 	handler.ServeHTTP(recorder, request)

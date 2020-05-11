@@ -2,23 +2,24 @@ package controller
 
 import (
 	"encoding/json"
+	"net/http"
+
 	"github.com/fsantiag/track-progress/back-for-front/src/model"
 	"github.com/fsantiag/track-progress/back-for-front/src/service"
 	"github.com/fsantiag/track-progress/back-for-front/src/service/task"
-	"net/http"
 )
 
-//SaveTask is a method to receice endpoint data and send to save task
+//SaveTask is a method to receive endpoint data and send to save task
 func SaveTask(writer http.ResponseWriter, request *http.Request) {
 	taskService := task.NewTaskService()
 	saveTask(writer, request, taskService)
 }
 
 func saveTask(writer http.ResponseWriter, request *http.Request, service service.TaskService) {
-	var task model.Task
-	json.NewDecoder(request.Body).Decode(&task)
+	var taskToSend model.Task
+	_ = json.NewDecoder(request.Body).Decode(&taskToSend)
 
-	service.SendTask(task)
+	service.SendTask(taskToSend)
 
 	writer.WriteHeader(http.StatusCreated)
 }
