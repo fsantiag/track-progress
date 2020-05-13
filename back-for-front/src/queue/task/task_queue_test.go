@@ -6,7 +6,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/service/sqs"
 	"github.com/fsantiag/track-progress/back-for-front/src/model/task"
-	"github.com/fsantiag/track-progress/back-for-front/src/service/task/internal/mock"
+	"github.com/fsantiag/track-progress/back-for-front/src/queue/task/internal/mock"
 	"github.com/gocql/gocql"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/stretchr/testify/assert"

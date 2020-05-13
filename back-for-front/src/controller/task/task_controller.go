@@ -8,6 +8,11 @@ import (
 	model "github.com/fsantiag/track-progress/back-for-front/src/model/task"
 	"github.com/fsantiag/track-progress/back-for-front/src/queue"
 	"github.com/fsantiag/track-progress/back-for-front/src/queue/task"
+	"github.com/fsantiag/track-progress/back-for-front/src/util"
+)
+
+var (
+	queueURL = util.Getenv("SQS_HOST", "http://localhost:4576") + util.QueueName
 )
 
 //SaveTask is a method to receive endpoint data and send to save task
@@ -21,7 +26,7 @@ func saveTask(writer http.ResponseWriter, request *http.Request, taskQueue queue
 	var taskToSend model.Task
 	_ = json.NewDecoder(request.Body).Decode(&taskToSend)
 
-	taskQueue.SendTask(taskToSend, "http://localhost:4576/queue/queue")
+	taskQueue.SendTask(taskToSend, queueURL)
 
 	writer.WriteHeader(http.StatusCreated)
 }
