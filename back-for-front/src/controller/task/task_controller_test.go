@@ -17,7 +17,7 @@ var (
 )
 
 func TestSaveTask_ReturnStatus201(t *testing.T) {
-	err, recorder := executeMethodPostToTask()
+	recorder, err := executeMethodPostToTask()
 
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusCreated, recorder.Code)
@@ -28,19 +28,19 @@ func TestSaveTask_ShouldCallServiceToSendMessageToSQS(t *testing.T) {
 	_ = json.Unmarshal([]byte(JSON), &task)
 	request, _ := http.NewRequest(http.MethodPost, "/task", strings.NewReader(JSON))
 	recorder := httptest.NewRecorder()
-	mockedTaskService := mock.TaskServiceMock{}
-	mockedTaskService.On("SendTask", task)
+	mockedTaskQueue := mock.TaskQueueMock{}
+	mockedTaskQueue.On("SendTask", task)
 
-	saveTask(recorder, request, &mockedTaskService)
+	saveTask(recorder, request, &mockedTaskQueue)
 
-	mockedTaskService.AssertNumberOfCalls(t, "SendTask", 1)
-	mockedTaskService.AssertExpectations(t)
+	mockedTaskQueue.AssertNumberOfCalls(t, "SendTask", 1)
+	mockedTaskQueue.AssertExpectations(t)
 }
 
-func executeMethodPostToTask() (error, *httptest.ResponseRecorder) {
+func executeMethodPostToTask() (*httptest.ResponseRecorder, error) {
 	request, err := http.NewRequest(http.MethodPost, "/task", strings.NewReader(JSON))
 	recorder := httptest.NewRecorder()
 	handler := http.HandlerFunc(SaveTask)
 	handler.ServeHTTP(recorder, request)
-	return err, recorder
+	return recorder, err
 }
