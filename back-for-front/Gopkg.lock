@@ -2,7 +2,7 @@
 
 
 [[projects]]
-  digest = "1:976b1add1b951db34d85f0e8df9b3c8583e350a83acd2082a31aa83f515b9b14"
+  digest = "1:9a539062ad15e8ebcf7e1e3b1449b3dab56cfb02d3cd95b89f8c5d8465734b2b"
   name = "github.com/aws/aws-sdk-go"
   packages = [
     "aws",
@@ -10,24 +10,38 @@
     "aws/awsutil",
     "aws/client",
     "aws/client/metadata",
+    "aws/corehandlers",
     "aws/credentials",
+    "aws/credentials/ec2rolecreds",
+    "aws/credentials/endpointcreds",
+    "aws/credentials/processcreds",
+    "aws/credentials/stscreds",
+    "aws/csm",
+    "aws/defaults",
+    "aws/ec2metadata",
     "aws/endpoints",
     "aws/request",
+    "aws/session",
     "aws/signer/v4",
     "internal/context",
     "internal/ini",
     "internal/sdkio",
     "internal/sdkmath",
     "internal/sdkrand",
+    "internal/sdkuri",
     "internal/shareddefaults",
     "internal/strings",
     "internal/sync/singleflight",
     "private/protocol",
+    "private/protocol/json/jsonutil",
     "private/protocol/query",
     "private/protocol/query/queryutil",
     "private/protocol/rest",
     "private/protocol/xml/xmlutil",
     "service/sqs",
+    "service/sqs/sqsiface",
+    "service/sts",
+    "service/sts/stsiface",
   ]
   pruneopts = "UT"
   revision = "80760876d2f0fe900443900ba667b7a15ebfd055"
@@ -43,15 +57,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:0d1b3fa48d5c9ac2e9e96f4d86f62a710e51a8c1ee8319d441649d726f98f788"
+  digest = "1:c8b09a55d9c45509524daf41e8768a5191c8142f7107cc049cdf01399e507aac"
   name = "github.com/fsantiag/track-progress"
-  packages = [
-    "backend/src/model",
-    "backend/src/repository",
-    "backend/src/service",
-  ]
+  packages = ["backend/src/util"]
   pruneopts = "UT"
-  revision = "c51a46d8d681f8d6e990b017045a03d2feeb3d12"
+  revision = "b28cbcd9fb446addee500e368d14c49d9d874384"
 
 [[projects]]
   branch = "master"
@@ -90,28 +100,12 @@
   revision = "c2b33e84"
 
 [[projects]]
-  digest = "1:09cb61dc19af93deae01587e2fdb1c081e0bf48f1a5ad5fa24f48750dc57dce8"
-  name = "github.com/konsorten/go-windows-terminal-sequences"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "edb144dfd453055e1e49a3d8b410a660b5a87613"
-  version = "v1.0.3"
-
-[[projects]]
   digest = "1:0028cb19b2e4c3112225cd871870f2d9cf49b9b4276531f03438a88e94be86fe"
   name = "github.com/pmezard/go-difflib"
   packages = ["difflib"]
   pruneopts = "UT"
   revision = "792786c7400a136282c1664665ae0a8db921c6c2"
   version = "v1.0.0"
-
-[[projects]]
-  digest = "1:05eebdd5727fea23083fce0d98d307d70c86baed644178e81608aaa9f09ea469"
-  name = "github.com/sirupsen/logrus"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "60c74ad9be0d874af0ab0daef6ab07c5c5911f0d"
-  version = "v1.6.0"
 
 [[projects]]
   digest = "1:23472f69a3ee7225de2f104aa48c6456959d1c155e45035c9845806d83109190"
@@ -133,17 +127,6 @@
   version = "v1.5.1"
 
 [[projects]]
-  branch = "master"
-  digest = "1:8cab10971112233c82c83683a517378038eba1c20e71b29c592b73fa212437b3"
-  name = "golang.org/x/sys"
-  packages = [
-    "internal/unsafeheader",
-    "unix",
-  ]
-  pruneopts = "UT"
-  revision = "bc7a7d42d5c30f4d0fe808715c002826ce2c624e"
-
-[[projects]]
   digest = "1:2d1fbdc6777e5408cabeb02bf336305e724b925ff4546ded0fa8715a7267922a"
   name = "gopkg.in/inf.v0"
   packages = ["."]
@@ -163,7 +146,13 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/fsantiag/track-progress/backend/src/service",
+    "github.com/aws/aws-sdk-go/aws",
+    "github.com/aws/aws-sdk-go/aws/credentials",
+    "github.com/aws/aws-sdk-go/aws/endpoints",
+    "github.com/aws/aws-sdk-go/aws/session",
+    "github.com/aws/aws-sdk-go/service/sqs",
+    "github.com/aws/aws-sdk-go/service/sqs/sqsiface",
+    "github.com/fsantiag/track-progress/backend/src/util",
     "github.com/gocql/gocql",
     "github.com/stretchr/testify/assert",
     "github.com/stretchr/testify/mock",
