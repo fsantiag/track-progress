@@ -29,7 +29,7 @@ func TestSaveTask_ShouldCallServiceToSendMessageToSQS(t *testing.T) {
 	request, _ := http.NewRequest(http.MethodPost, "/task", strings.NewReader(JSON))
 	recorder := httptest.NewRecorder()
 	mockedTaskQueue := mock.TaskQueueMock{}
-	mockedTaskQueue.On("SendTask", task)
+	mockedTaskQueue.On("SendTask", task, "http://localhost:4576/queue/queue")
 
 	saveTask(recorder, request, &mockedTaskQueue)
 

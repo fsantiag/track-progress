@@ -21,7 +21,7 @@ func saveTask(writer http.ResponseWriter, request *http.Request, taskQueue queue
 	var taskToSend model.Task
 	_ = json.NewDecoder(request.Body).Decode(&taskToSend)
 
-	taskQueue.SendTask(taskToSend, "/queue/queue")
+	taskQueue.SendTask(taskToSend, "http://localhost:4576/queue/queue")
 
 	writer.WriteHeader(http.StatusCreated)
 }
