@@ -6,7 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/endpoints"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sqs"
-	"github.com/fsantiag/track-progress/backend/src/util"
+	"github.com/fsantiag/track-progress/back-for-front/src/util"
 )
 
 // NewSession create a new connection to SQS
