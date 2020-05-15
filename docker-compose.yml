@@ -14,6 +14,18 @@ services:
     ports:
       - "8070:8080"
     command: "bash -c './wait.sh -t 30 sqs:4576 && ./wait.sh -t 30 cassandra:9042 && /app/backend'"
+  bff:
+    container_name: bff
+    image: bff
+    environment: 
+      - SQS_HOST=http://sqs:4576
+      - PROFILE_ENV=prod
+    networks: 
+      tp-network:
+        ipv4_address: 172.28.0.6
+    ports: 
+      - "8071:8081"
+    command: "bash -c './wait.sh -t 30 sqs:4576 && /app/bff'"
   frontend:
     container_name: frontend
     image: frontend
