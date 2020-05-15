@@ -3,6 +3,7 @@ package server
 import (
 	"net/http"
 
+	"github.com/fsantiag/track-progress/back-for-front/src/controller/health"
 	"github.com/fsantiag/track-progress/back-for-front/src/controller/task"
 )
 
@@ -13,5 +14,6 @@ type Route struct {
 }
 
 var routes = []Route{
+	{Name: "Health", Method: "GET", Path: "/health", HandlerFunc: health.Health},
 	{Name: "SaveTask", Method: "POST", Path: "/task/save", HandlerFunc: task.SaveTask},
 }
