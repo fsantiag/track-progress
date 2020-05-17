@@ -2,7 +2,7 @@
 
 
 [[projects]]
-  digest = "1:38a4acb3bd95d285164f729d63cd302f5ec51126d93e59bf53cc6c93dfd6a547"
+  digest = "1:15336f491556a2524b3422edb21e21c28d39abb655517b2274bd2d67577f389f"
   name = "github.com/aws/aws-sdk-go"
   packages = [
     "aws",
@@ -44,8 +44,8 @@
     "service/sts/stsiface",
   ]
   pruneopts = "UT"
-  revision = "ac563387549b07941406daf0b29878f9ce909b71"
-  version = "v1.30.14"
+  revision = "e1dce00102dd471f60e349c07d934a3af5c4414b"
+  version = "v1.30.29"
 
 [[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
@@ -57,7 +57,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:e6e4f10c66f6b83996be04f75b65722b364f3679c9ee459722d0d7f5d79b4ce9"
+  digest = "1:962c3fb7c6b7d6ba1030ba035c6b4cc5b77590bf9891af6a0704375d5f97fe31"
   name = "github.com/gocql/gocql"
   packages = [
     ".",
@@ -66,7 +66,7 @@
     "internal/streams",
   ]
   pruneopts = "UT"
-  revision = "b454769479c6201d26d2a2d7a29ac9a0e6fbc9fc"
+  revision = "0714040f3e35885cd24d406cd3de9356ab0c9504"
 
 [[projects]]
   digest = "1:e4f5819333ac698d294fe04dbf640f84719658d5c7ce195b10060cc37292ce79"
@@ -116,15 +116,15 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:78feef48c04470aec51988d88fcb313ed6ee27b4ad1a9c9e399240748e6039f7"
+  digest = "1:1705716d33e69b9567ec6fd8e318a6e60869838b60643e54d0301bed8ac427d1"
   name = "github.com/sirupsen/logrus"
   packages = [
     ".",
     "hooks/test",
   ]
   pruneopts = "UT"
-  revision = "d417be0fe654de640a82370515129985b407c7e3"
-  version = "v1.5.0"
+  revision = "60c74ad9be0d874af0ab0daef6ab07c5c5911f0d"
+  version = "v1.6.0"
 
 [[projects]]
   digest = "1:23472f69a3ee7225de2f104aa48c6456959d1c155e45035c9845806d83109190"
@@ -147,11 +147,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:f88172369bcdae548777d8f2c59b11561f7e41686f426c583a7abaeec6978cc7"
+  digest = "1:020620a097c2bfd056c8db7d31a69ea2cfed874ce985763dcd9ae00f9fa5f74b"
   name = "golang.org/x/sys"
-  packages = ["unix"]
+  packages = [
+    "internal/unsafeheader",
+    "unix",
+  ]
   pruneopts = "UT"
-  revision = "29b57079015a5bb5f6b6f0c01679754e4bd75916"
+  revision = "1151b9dac4a98d49ef7f80f07ddd826ff51e0b36"
 
 [[projects]]
   digest = "1:2d1fbdc6777e5408cabeb02bf336305e724b925ff4546ded0fa8715a7267922a"
@@ -162,12 +165,12 @@
   version = "v0.9.1"
 
 [[projects]]
-  digest = "1:55b110c99c5fdc4f14930747326acce56b52cfce60b24b1c03ef686ac0e46bb1"
+  digest = "1:d7f1bd887dc650737a421b872ca883059580e9f8314d601f88025df4f4802dce"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
   pruneopts = "UT"
-  revision = "53403b58ad1b561927d19068c655246f2db79d48"
-  version = "v2.2.8"
+  revision = "0b1645d91e851e735d3e23330303ce81f70adbe3"
+  version = "v2.3.0"
 
 [solve-meta]
   analyzer-name = "dep"

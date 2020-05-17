@@ -1,4 +1,4 @@
-package queue
+package sqs
 
 import (
 	"github.com/aws/aws-sdk-go/aws"

@@ -4,12 +4,12 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/aws/aws-sdk-go/service/sqs"
-	"github.com/fsantiag/track-progress/backend/src/database"
-	"github.com/fsantiag/track-progress/backend/src/queue"
+	awssqs "github.com/aws/aws-sdk-go/service/sqs"
+	"github.com/fsantiag/track-progress/backend/src/cassandra"
 	"github.com/fsantiag/track-progress/backend/src/repository"
 	"github.com/fsantiag/track-progress/backend/src/server"
 	"github.com/fsantiag/track-progress/backend/src/service"
+	"github.com/fsantiag/track-progress/backend/src/sqs"
 	"github.com/fsantiag/track-progress/backend/src/util"
 	"github.com/sirupsen/logrus"
 )
@@ -30,22 +30,23 @@ func main() {
 }
 
 func setupDatabase() repository.SessionInterface {
-	session, err := database.NewSession(&logger)
+	session, err := cassandra.NewSession(&logger)
 	if err != nil {
 		logrus.Fatal("Database connection error: ", err.Error())
 	}
-	database.Migrate(session)
+	cassandra.Migrate(session)
 	return session
 }
 
 func startGoroutineListeners(databaseSession repository.SessionInterface) {
-	channel := make(chan *sqs.Message, 100)
-	sqsSession := queue.NewSession()
-	queueURL, err := queue.CreateQueues(sqsSession)
+	sqsSession := sqs.NewSession()
+	queueURL, err := sqs.CreateQueues(sqsSession)
 	if err != nil {
 		logger.Fatal("Queues creator error: ", err.Error())
 	}
-	go queue.Poll(channel, queueURL, sqsSession, &logger)
+
+	channel := make(chan *awssqs.Message, 100)
+	go sqs.Poll(channel, queueURL, sqsSession, &logger)
 
 	repository := repository.NewTaskRepository(&logger, databaseSession)
 	service := service.NewTaskService(&logger, repository)

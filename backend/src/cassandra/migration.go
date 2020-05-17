@@ -1,4 +1,4 @@
-package database
+package cassandra
 
 import "github.com/fsantiag/track-progress/backend/src/repository"
 
